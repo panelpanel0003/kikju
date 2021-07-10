@@ -1,13 +1,12 @@
-on: [push, pull_request]
-
+on: push
+name: Deploy something
 jobs:
   build:
+    name: Run scripts
     runs-on: ubuntu-latest
-
     steps:
-    - name: Create the Mattermost Message
-      run: |
-        echo "{\"text\":\"testing github action :tada:\"}" > mattermost.json
-    - uses: mattermost/action-mattermost-notify@master
-      env:
-        MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+      - uses: actions/checkout@master
+      - uses: pioug/la-cle@v1.1.0
+        with:
+          GH_SSH_KEY: ${{ secrets.SSH_KEY }}
+      - run: npm ci
